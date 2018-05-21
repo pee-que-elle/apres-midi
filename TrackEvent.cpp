@@ -45,7 +45,7 @@ void TrackEvent::SetEvent(std::vector<uint8_t>::iterator event, std::vector<uint
 		}
 	}
 
-
+	
 	if (std::get<0>(current_match) == UNDEFINED)
 	{
 		Helpers::AssertError(std::get<0>(current_match) == UNDEFINED, "Undefined MIDI event encountered.");
@@ -76,6 +76,7 @@ std::tuple<bool, size_t> TrackEvent::WildcardMatchEvent(std::vector<std::uint8_t
 
 	for (size_t i = 0; i < pattern.size(); ++i)
 	{
+		// Wildcard checks
 		if (
 			(
 				(pattern[i] == data_hex[i]) ||
@@ -87,9 +88,7 @@ std::tuple<bool, size_t> TrackEvent::WildcardMatchEvent(std::vector<std::uint8_t
 		
 		if (i != 0 && pattern[i] == 'l' && pattern[i - 1] == 'l') size = (uint8_t)strtol(data_hex.substr(i - 1, i + 1).c_str() , NULL, 16);
 	}
-
 	return std::make_tuple(true, (pattern.size() + 1) / 3 + size);	
-
 }
 
 

@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Decoder.h" />
     <ClInclude Include="HeaderChunk.h" />
     <ClInclude Include="Helpers.h" />

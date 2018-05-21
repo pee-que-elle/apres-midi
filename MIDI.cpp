@@ -1,11 +1,9 @@
 #include "stdafx.h"
 #include "MIDI.h"
 
-
 MIDI::MIDI()
 {
 }
-
 
 MIDI::~MIDI()
 {

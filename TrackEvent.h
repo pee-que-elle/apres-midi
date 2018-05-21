@@ -34,6 +34,7 @@ public:
 	~TrackEvent();
 	std::tuple<bool, size_t> WildcardMatchEvent(std::vector<std::uint8_t>::iterator data, std::string pattern);
 	size_t NWildcardsInSig(std::string signature);
+	void A();
 	enum Event type;
 	std::vector<uint8_t> signature;
 	std::vector<uint8_t> data;
