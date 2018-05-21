@@ -13,14 +13,12 @@ void Helpers::AssertWarn(bool x, std::string y)
 
 void Helpers::AssertError(bool x, std::string y)
 {
-	
 	if (x)
 	{
 		std::cout << "[ERROR] " << y << std::endl;
 		system("pause");
 		exit(1);
 	}
-
 }
 
 std::string Helpers::ToHex(std::vector<uint8_t> data)

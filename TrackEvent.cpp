@@ -23,16 +23,23 @@ void TrackEvent::SetEvent(std::vector<uint8_t>::iterator event, std::vector<uint
 
 	for (auto arg : this->signatures)
 	{
+		// To skip the placeholder enum
 		if (arg.first == UNDEFINED) continue;
 
-		if ((chunk_boundary - event) < (arg.second.size() + 1) / 3 )
-		{
-			continue;
-		}
+		// Be sure to not read OOB, check if arg length fits in the buffer
+		if ((chunk_boundary - event) < (arg.second.size() + 1) / 3 ) continue;
+		
 		std::tuple<bool, size_t> potential_match = this->WildcardMatchEvent(event, arg.second);
 
-		// We give precedence to the longest signature, because those should be more precise
-		if (std::get<0>(potential_match) && arg.second.size() > this->signatures[std::get<0>(current_match)].size())
+		/* We give precedence to the signature with the least wildcard symbols, because those should be more precise
+		   This is needed because a event signature can match another, more general signature too. for example: 
+
+			CONTROLLER_CHANGE: B+ -+ -+
+			ALL_SOUND_OFF: B+ 78 00
+
+			`B0 78 00` would match both, but ALL_SOUND_OFF is chosen because its signature is more precise.
+		 */
+		if (std::get<0>(potential_match) && (std::get<0>(current_match) == UNDEFINED || this->NWildcardsInSig(arg.second) < this->NWildcardsInSig(this->signatures[std::get<0>(current_match)])))
 		{
 			current_match = std::make_tuple(arg.first, std::get<1>(potential_match));
 		}
@@ -56,10 +63,6 @@ TrackEvent::~TrackEvent()
 {
 }
 
-
-
-
-
 std::tuple<bool, size_t> TrackEvent::WildcardMatchEvent(std::vector<std::uint8_t>::iterator data, std::string pattern)
 {
 	size_t bytes_in_pattern = (pattern.size() + 1) / 3;
@@ -80,15 +83,25 @@ std::tuple<bool, size_t> TrackEvent::WildcardMatchEvent(std::vector<std::uint8_t
 				(pattern[i] == '-' && data_hex[i] >= '0' && data_hex[i] <= '7') ||
 				(pattern[i] == '/' && data_hex[i] >= '0' && data_hex[i] <= '1')
 			) == false
-		)
-		{
-			
-			return std::make_tuple(false, 0);
-		}
+		) return std::make_tuple(false, 0);
 		
 		if (i != 0 && pattern[i] == 'l' && pattern[i - 1] == 'l') size = (uint8_t)strtol(data_hex.substr(i - 1, i + 1).c_str() , NULL, 16);
 	}
 
 	return std::make_tuple(true, (pattern.size() + 1) / 3 + size);	
 
+}
+
+
+size_t TrackEvent::NWildcardsInSig(std::string signature)
+{
+	size_t score = 0;
+	stringtolower(signature);
+
+	for (char a : signature)
+	{
+		if (this->wildcard_value_table.count(a) == 1) score += this->wildcard_value_table[a];
+	}
+
+	return score;
 }

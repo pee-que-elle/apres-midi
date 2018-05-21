@@ -33,6 +33,7 @@ public:
 	void SetEvent(std::vector<uint8_t>::iterator event, std::vector<uint8_t>::iterator chunk_boundary);
 	~TrackEvent();
 	std::tuple<bool, size_t> WildcardMatchEvent(std::vector<std::uint8_t>::iterator data, std::string pattern);
+	size_t NWildcardsInSig(std::string signature);
 	enum Event type;
 	std::vector<uint8_t> signature;
 	std::vector<uint8_t> data;
@@ -78,5 +79,13 @@ public:
 
 		{ UNDEFINED,					""}
 
+	};
+
+	std::map<char, size_t> wildcard_value_table =
+	{
+		{'+', 16},
+		{'l', 16},
+		{'-', 8},
+		{'/', 2}
 	};
 };
