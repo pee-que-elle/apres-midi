@@ -33,60 +33,11 @@ public:
 	void SetEvent(std::vector<uint8_t>::iterator event, std::vector<uint8_t>::iterator chunk_boundary);
 	~TrackEvent();
 	std::tuple<bool, size_t> WildcardMatchEvent(std::vector<std::uint8_t>::iterator data, std::string pattern);
-	size_t NWildcardsInSig(std::string signature);
-	void A();
+
 	enum Event type;
 	std::vector<uint8_t> signature;
 	std::vector<uint8_t> data;
 
-	std::map<Event, std::string> signatures =
-	{
+	static std::map<Event, std::string> signatures;
 
-		{ NOTE_OFF,						"8+ -+ -+" },
-		{ NOTE_ON,						"9+ -+ -+" },
-		{ POLYPHONIC_KEY_PRESSURE,		"A+ -+ -+" },
-		{ CONTROLLER_CHANGE,			"B+ -+ -+" },
-		{ PROGRAM_CHANGE,				"C+ -+" },
-		{ CHANNEL_KEY_PRESSURE,			"D+ -+" },
-		{ PITCH_BEND,					"E+ -+ -+" },
-
-		{ ALL_SOUND_OFF,				"B+ 78 00" },
-		{ RESET_ALL_CONTROLLERS,		"B+ 79 00" },
-		{ LOCAL_CONTROL,				"B+ 7A -+" },
-		{ ALL_NOTES_OFF,				"B+ 7B 00" },
-		{ OMNI_MODE_OFF,				"B+ 7C 00" },
-		{ OMNI_MODE_ON,					"B+ 7D 00" },
-		{ MONO_MODE_ON,					"B+ 7E /0" },
-		{ POLY_MODE_ON,					"B+ 7F 00" },
-
-		{ F0_SYSEX_EVENT,				"F0 LL" },
-		{ F7_SYSEX_EVENT,				"F7 LL" },
-
-		{ SEQUENCE_NUMBER,				"FF 00 02 ++ ++" },
-		{ TEXT_EVENT,					"FF 01 LL" },
-		{ COPYRIGHT_NOTICE,				"FF 02 LL" },
-		{ SEQUENCE_OR_TRACK_NAME,		"FF 03 LL" },
-		{ INSTRUMENT_NAME,				"FF 04 LL" },
-		{ LYRIC,						"FF 05 LL" },
-		{ MARKER,						"FF 06 LL" },
-		{ CUE_POINT,					"FF 07 LL" },
-		{ MIDI_CHANNEL_PREFIX,			"FF 20 01 0+" },
-		{ END_OF_TRACK,					"FF 2F 00" },
-		{ SET_TEMPO,					"FF 51 03 ++ ++ ++" },
-		{ SMTPE_OFFSET,					"FF 54 05 ++ ++ ++ ++ ++" },
-		{ TIME_SIGNATURE,				"FF 58 04 ++ ++ ++ ++" },
-		{ KEY_SIGNATURE,				"FF 59" },
-		{ SEQUENCE_SPECIFIC_META_EVENT, "FF 7F LL" },
-
-		{ UNDEFINED,					""}
-
-	};
-
-	std::map<char, size_t> wildcard_value_table =
-	{
-		{'+', 16},
-		{'l', 16},
-		{'-', 8},
-		{'/', 2}
-	};
 };

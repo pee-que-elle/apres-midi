@@ -56,8 +56,10 @@ MIDI Decoder::GetMIDI()
 	{
 		
 		// We can use a static offset because chunk names/chunk lengths are always 4 chars long
-		auto chunk_header = std::string(this->MIDIBuffer.begin() + i, this->MIDIBuffer.begin() + i + 4); i += 4;
-		uint32_t length = Helpers::ParseMSBU32((uint8_t*)std::string(this->MIDIBuffer.begin() + i, this->MIDIBuffer.begin() + i + 4 ).data()); i += 4;
+		auto chunk_header = std::string(this->MIDIBuffer.begin() + i, this->MIDIBuffer.begin() + i + 4); 
+		i += 4;
+		uint32_t length = Helpers::ParseMSBU32(&MIDIBuffer[i]);
+		i += 4;
 		
 		// Be sure to prevent segfaults with bounds checking
 		Helpers::AssertError(length > this->MIDIBuffer.size() - i, std::string("Length of " + std::to_string(length) + " Bytes exceeds buffer length."));

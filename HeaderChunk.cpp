@@ -28,7 +28,6 @@ HeaderChunk::HeaderChunk(std::vector<uint8_t>& data): MIDIChunk(HEADER, data)
 	
 }
 
-
 HeaderChunk::~HeaderChunk()
 {
 }

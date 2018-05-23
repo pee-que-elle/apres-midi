@@ -10,7 +10,52 @@
 #include <cstdlib>
 #include <iostream>
 
-#define stringtolower(x) std::transform(x.begin(), x.end(), x.begin(), ::tolower);
+#define stringtolower(x) std::transform(x.begin(), x.end(), x.begin(), std::tolower);
+
+std::map<Event, std::string> TrackEvent::signatures  =
+{
+
+	// Index-based precedence :p
+	{ ALL_SOUND_OFF,				"B+ 78 00" },
+	{ RESET_ALL_CONTROLLERS,		"B+ 79 00" },
+	{ LOCAL_CONTROL,				"B+ 7A -+" },
+	{ ALL_NOTES_OFF,				"B+ 7B 00" },
+	{ OMNI_MODE_OFF,				"B+ 7C 00" },
+	{ OMNI_MODE_ON,					"B+ 7D 00" },
+	{ MONO_MODE_ON,					"B+ 7E /0" },
+	{ POLY_MODE_ON,					"B+ 7F 00" },
+
+	{ NOTE_OFF,						"8+ -+ -+" },
+	{ NOTE_ON,						"9+ -+ -+" },
+	{ POLYPHONIC_KEY_PRESSURE,		"A+ -+ -+" },
+	{ CONTROLLER_CHANGE,			"B+ -+ -+" },
+	{ PROGRAM_CHANGE,				"C+ -+" },
+	{ CHANNEL_KEY_PRESSURE,			"D+ -+" },
+	{ PITCH_BEND,					"E+ -+ -+" },
+
+	
+	{ F0_SYSEX_EVENT,				"F0 LL" },
+	{ F7_SYSEX_EVENT,				"F7 LL" },
+
+	{ SEQUENCE_NUMBER,				"FF 00 02 ++ ++" },
+	{ TEXT_EVENT,					"FF 01 LL" },
+	{ COPYRIGHT_NOTICE,				"FF 02 LL" },
+	{ SEQUENCE_OR_TRACK_NAME,		"FF 03 LL" },
+	{ INSTRUMENT_NAME,				"FF 04 LL" },
+	{ LYRIC,						"FF 05 LL" },
+	{ MARKER,						"FF 06 LL" },
+	{ CUE_POINT,					"FF 07 LL" },
+	{ MIDI_CHANNEL_PREFIX,			"FF 20 01 0+" },
+	{ END_OF_TRACK,					"FF 2F 00" },
+	{ SET_TEMPO,					"FF 51 03 ++ ++ ++" },
+	{ SMTPE_OFFSET,					"FF 54 05 ++ ++ ++ ++ ++" },
+	{ TIME_SIGNATURE,				"FF 58 04 ++ ++ ++ ++" },
+	{ KEY_SIGNATURE,				"FF 59" },
+	{ SEQUENCE_SPECIFIC_META_EVENT, "FF 7F LL" },
+
+	{ UNDEFINED,					"" }
+
+};
 
 
 TrackEvent::TrackEvent()
@@ -30,22 +75,15 @@ void TrackEvent::SetEvent(std::vector<uint8_t>::iterator event, std::vector<uint
 		if ((chunk_boundary - event) < (arg.second.size() + 1) / 3 ) continue;
 		
 		std::tuple<bool, size_t> potential_match = this->WildcardMatchEvent(event, arg.second);
-
-		/* We give precedence to the signature with the least wildcard symbols, because those should be more precise
-		   This is needed because a event signature can match another, more general signature too. for example: 
-
-			CONTROLLER_CHANGE: B+ -+ -+
-			ALL_SOUND_OFF: B+ 78 00
-
-			`B0 78 00` would match both, but ALL_SOUND_OFF is chosen because its signature is more precise.
-		 */
-		if (std::get<0>(potential_match) && (std::get<0>(current_match) == UNDEFINED || this->NWildcardsInSig(arg.second) < this->NWildcardsInSig(this->signatures[std::get<0>(current_match)])))
+	
+		if (std::get<0>(potential_match))
 		{
 			current_match = std::make_tuple(arg.first, std::get<1>(potential_match));
+			break;
 		}
+		
 	}
 
-	
 	if (std::get<0>(current_match) == UNDEFINED)
 	{
 		Helpers::AssertError(std::get<0>(current_match) == UNDEFINED, "Undefined MIDI event encountered.");
@@ -86,21 +124,8 @@ std::tuple<bool, size_t> TrackEvent::WildcardMatchEvent(std::vector<std::uint8_t
 			) == false
 		) return std::make_tuple(false, 0);
 		
-		if (i != 0 && pattern[i] == 'l' && pattern[i - 1] == 'l') size = (uint8_t)strtol(data_hex.substr(i - 1, i + 1).c_str() , NULL, 16);
+		if (i != 0 && pattern[i] == 'l' && pattern[i - 1] == 'l')
+			size = (uint8_t)strtol(data_hex.substr(i - 1, i + 1).c_str() , NULL, 16);
 	}
 	return std::make_tuple(true, (pattern.size() + 1) / 3 + size);	
-}
-
-
-size_t TrackEvent::NWildcardsInSig(std::string signature)
-{
-	size_t score = 0;
-	stringtolower(signature);
-
-	for (char a : signature)
-	{
-		if (this->wildcard_value_table.count(a) == 1) score += this->wildcard_value_table[a];
-	}
-
-	return score;
 }

@@ -2,6 +2,7 @@
 
 #include "MIDIChunk.h"
 #include "TrackEvent.h"
+#include <ctime>
 
 class TrackChunk : public MIDIChunk
 {
@@ -12,6 +13,7 @@ public:
 	std::vector<std::pair<uint32_t, TrackEvent>> pairs;
 
 	void ParseEvents();
+
 
 };
 

@@ -5,10 +5,11 @@
 
 #include <iomanip>
 
+
 TrackChunk::TrackChunk(std::vector<uint8_t>& data) : MIDIChunk(TRACK, data)
 {
+
 	this->ParseEvents();
-	system("pause");
 }
 
 TrackChunk::~TrackChunk()
@@ -17,7 +18,7 @@ TrackChunk::~TrackChunk()
 
 void TrackChunk::ParseEvents()
 {
-	for (unsigned i = 8; i < this->data.size();)
+	for (size_t i = 8; i < this->data.size();)
 	{
 		std::pair<uint32_t, TrackEvent> current;
 
