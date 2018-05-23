@@ -72,8 +72,8 @@ MIDI Decoder::GetMIDI()
 			this->MIDIBuffer.begin() + i + length
 		);
 
-		if (chunk_header == "MThd") mid.AddChunk(HeaderChunk(data));
-		else mid.AddChunk(TrackChunk(data));
+		if (chunk_header == "MThd") mid.AddChunk(new HeaderChunk(data));
+		else mid.AddChunk(new TrackChunk(data));
 
 		i += length;	
 	}

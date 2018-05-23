@@ -83,12 +83,9 @@ void TrackEvent::SetEvent(std::vector<uint8_t>::iterator event, std::vector<uint
 		}
 		
 	}
-
-	if (std::get<0>(current_match) == UNDEFINED)
-	{
-		Helpers::AssertError(std::get<0>(current_match) == UNDEFINED, "Undefined MIDI event encountered.");
-	}
-
+	
+	Helpers::AssertError(std::get<0>(current_match) == UNDEFINED, "Undefined MIDI event encountered.");
+	
 	this->type = std::get<0>(current_match);
 
 	auto boundary = event + std::get<1>(current_match) - (this->signatures[std::get<0>(current_match)].size() + 1) / 3;

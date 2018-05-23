@@ -11,7 +11,7 @@ class MIDIChunk
 {
 public:
 	MIDIChunk(MIDIType type, std::vector<uint8_t>& data);
-	~MIDIChunk();
+	virtual ~MIDIChunk();
 
 	size_t GetDataLength();
 	std::string GetType();

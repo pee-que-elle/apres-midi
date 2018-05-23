@@ -10,9 +10,9 @@ public:
 	MIDI();
 	~MIDI();
 
-	void AddChunk(MIDIChunk chunk);
+	void AddChunk(MIDIChunk *chunk);
 
-	std::vector<MIDIChunk> chunks;
+	std::vector<MIDIChunk*> chunks;
 
 	size_t chunks_parsed = 0;
 

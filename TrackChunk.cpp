@@ -38,6 +38,6 @@ void TrackChunk::ParseEvents()
 		
 		this->pairs.push_back(current);
 
-		std::cout << std::setw(30) << std::left << Debug::event_string_lookup[current.second.type] << " : " << Helpers::ToHex(current.second.data) << std::endl;
+		//std::cout << std::setw(30) << std::left << Debug::event_string_lookup[current.second.type] << " : " << Helpers::ToHex(current.second.data) << std::endl;
 	}
 }
