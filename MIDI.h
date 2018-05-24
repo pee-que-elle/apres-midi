@@ -11,6 +11,7 @@ public:
 	~MIDI();
 
 	void AddChunk(MIDIChunk *chunk);
+	void PrintInfo();
 
 	std::vector<MIDIChunk*> chunks;
 

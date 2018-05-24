@@ -2,17 +2,21 @@
 
 #include "MIDIChunk.h"
 
+enum DivisionType { TICKS_PER_QUARTER_NOTE = 0, FRAMES_PER_SECOND_TICKS_PER_FRAME = 1 };
+
 class HeaderChunk : public MIDIChunk
 {
 public:
 	HeaderChunk(std::vector<uint8_t>& data);
 	~HeaderChunk();
 
+	std::string Info() override;
+
 	uint16_t format = 0; // Either 0, 1, or 2. 0=single track, 1=one or more simultaneous tracks, 2=one or more independent tracks
 	uint16_t tracks = 0; // Amount of tracks in the MIDI
 	uint16_t division = 0; // Default delta time unit for MIDI
 
-	enum DivisionType { TICKS_PER_QUARTER_NOTE = 0, FRAMES_PER_SECOND_TICKS_PER_FRAME = 1 };
+	
 
 	struct DivisionDetails
 	{

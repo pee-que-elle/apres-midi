@@ -17,6 +17,11 @@ MIDIChunk::~MIDIChunk()
 {
 }
 
+std::string MIDIChunk::Info()
+{
+	return std::string();
+}
+
 size_t MIDIChunk::GetDataLength()
 {
 	// Subtract 8 to account for the 4-byte size identifier and 4-byte chunk header 
