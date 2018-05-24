@@ -39,7 +39,8 @@ std::string HeaderChunk::Info()
 	std::stringstream result;
 
 	result << "Format #" << this->format << ": " << Debug::HeaderChunk::format_descriptions[this->format] << std::endl
-		<< "Track #: " << this->tracks << std::endl << std::endl
+		<< "Track #: " << this->tracks << std::endl
+		<< "Size (bytes): " << this->data.size() << std::endl // should always be 14 but w/e
 		<< "Division Details: " << std::endl;
 
 	if (this->division_details.type == TICKS_PER_QUARTER_NOTE)

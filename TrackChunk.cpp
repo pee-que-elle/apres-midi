@@ -4,7 +4,7 @@
 #include "Debug.h"
 
 #include <iomanip>
-
+#include <sstream>
 
 TrackChunk::TrackChunk(std::vector<uint8_t>& data) : MIDIChunk(TRACK, data)
 {
@@ -40,4 +40,29 @@ void TrackChunk::ParseEvents()
 
 		//std::cout << std::setw(30) << std::left << Debug::TrackEvent::event_string_lookup[current.second.type] << " : " << Helpers::ToHex(current.second.data) << std::endl;
 	}
+}
+
+std::string TrackChunk::Info()
+{
+	std::stringstream result;
+
+	result << "Event-Deltatime Pairs: " << this->pairs.size() << std::endl
+		<< "Events: " << std::endl;
+
+	std::map<Event, size_t>	event_occurences;
+
+	for (auto pair : this->pairs)
+	{
+		Event type = pair.second.type;
+
+		if (event_occurences.count(type) == 0) event_occurences[type] = 1;
+		else event_occurences[type]++;
+	}
+
+	for (auto occurence : event_occurences)
+	{
+		result << "  " << std::left << std::setw(30) << std::setfill(' ') << Debug::TrackEvent::event_string_lookup[occurence.first] << ": " << occurence.second << std::endl;
+	}
+
+	return result.str();
 }

@@ -15,6 +15,7 @@ public:
 
 	std::vector<MIDIChunk*> chunks;
 
+private:
 	size_t chunks_parsed = 0;
 
 

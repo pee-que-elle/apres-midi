@@ -13,7 +13,8 @@ public:
 	std::vector<std::pair<uint32_t, TrackEvent>> pairs;
 
 	void ParseEvents();
-
+	
+	std::string Info() override;
 
 };
 
